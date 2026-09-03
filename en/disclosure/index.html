@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Affiliate Disclosure — PayoutCompare</title>
+  <meta name="description" content="How PayoutCompare is funded, and how that does — and doesn't — affect the comparisons we publish." />
+  <link rel="canonical" href="/en/disclosure/" />
+  <link rel="alternate" hreflang="ru" href="/disclosure/" />
+  <link rel="alternate" hreflang="en" href="/en/disclosure/" />
+  <link rel="alternate" hreflang="x-default" href="/disclosure/" />
+  <link rel="stylesheet" href="/assets/css/style.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a class="site-logo" href="/en/">PayoutCompare</a>
+      <nav class="site-nav">
+        <a href="/en/#firms">Prop firms</a>
+        <a href="/en/wise-vs-revolut-vs-bank-vs-crypto/">Wise vs Revolut vs Bank vs Crypto</a>
+        <a href="/en/disclosure/">Disclosure</a>
+        <a class="lang-switch" href="/disclosure/" aria-label="Переключить на русский"><span class="lang-switch-icon">🌐</span>RU</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container section">
+    <div class="card">
+      <h1>Affiliate Disclosure</h1>
+      <p>This site may earn a commission when you sign up for a service through links on this page. This does not affect the rates or fees you pay, and does not influence our comparisons. We recommend independently verifying all fees and terms directly with the provider before making a decision.</p>
+      <h2>How we choose what to show</h2>
+      <p>The calculator on this site ranks payout methods purely by the estimated amount you'd receive, based on publicly available fee and markup information. Whether or not we have an affiliate relationship with a provider has no bearing on that ranking or on the numbers shown.</p>
+      <h2>Where our data comes from</h2>
+      <p>Prop-firm payout terms are collected manually from each firm's own documentation and support resources, and are reviewed periodically — they can still be out of date. Exchange rates come from the free <a href="https://www.frankfurter.app/" target="_blank" rel="noopener">Frankfurter API</a>, which mirrors European Central Bank reference rates. Fee and markup figures for Wise, Revolut, banks, and crypto on-ramps are estimates based on typical published pricing, not live quotes.</p>
+      <h2>Questions</h2>
+      <p>If you spot outdated or inaccurate information, we want to know — always double-check figures directly with the provider before making a financial decision.</p>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <span>&copy; <span id="year"></span> PayoutCompare. Not financial advice — verify rates directly with providers.</span>
+      <span><a href="/en/disclosure/">Affiliate disclosure</a></span>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>

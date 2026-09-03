@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PayoutCompare — Compare Wise, Revolut, Bank &amp; Crypto Payout Methods for Prop Traders</title>
+  <meta name="description" content="See how much you actually receive when converting your prop-firm trading payout with Wise, Revolut, bank transfer, or crypto — compare rates, fees, and speed in one calculator." />
+  <link rel="canonical" href="/en/" />
+  <link rel="alternate" hreflang="ru" href="/" />
+  <link rel="alternate" hreflang="en" href="/en/" />
+  <link rel="alternate" hreflang="x-default" href="/" />
+  <meta property="og:title" content="PayoutCompare — Compare payout conversion methods for prop traders" />
+  <meta property="og:description" content="Compare real payout amounts across Wise, Revolut, bank transfer, and crypto before you withdraw." />
+  <meta property="og:type" content="website" />
+  <link rel="stylesheet" href="/assets/css/style.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a class="site-logo" href="/en/">PayoutCompare</a>
+      <nav class="site-nav">
+        <a href="/en/#firms">Prop firms</a>
+        <a href="/en/wise-vs-revolut-vs-bank-vs-crypto/">Wise vs Revolut vs Bank vs Crypto</a>
+        <a href="/en/disclosure/">Disclosure</a>
+        <a class="lang-switch" href="/" aria-label="Переключить на русский"><span class="lang-switch-icon">🌐</span>RU</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <h1>How much will you actually get on your prop-firm payout?</h1>
+        <p>Compare Wise, Revolut, bank transfer, and crypto side by side — real exchange rate, fee, and speed — before you convert your withdrawal into your local currency.</p>
+      </div>
+    </section>
+
+    <section class="container">
+      <div class="calculator-card">
+        <div id="calculator-root"></div>
+      </div>
+    </section>
+
+    <section class="section container" id="firms">
+      <h2>Payout guides by prop firm</h2>
+      <p>Each firm pays out differently. See the exact withdrawal methods, fees, and minimums for your firm, plus the calculator preset to your payout currency.</p>
+      <div class="firm-grid" id="firm-grid"></div>
+    </section>
+
+    <section class="section container">
+      <div class="card">
+        <h2>Why the "amount" a prop firm approves isn't what lands in your account</h2>
+        <p>Your prop firm sends your payout in USD (or EUR/GBP), usually via bank transfer, crypto, or a payout partner like RiseWorks. What you actually keep depends on two things once that money is on its way to you: the <strong>exchange rate</strong> used to convert it into your local currency, and the <strong>fees</strong> charged along the way. Those two factors can easily swing your final amount by 3-5% — real money on a five-figure payout. This site exists to make that comparison transparent before you pick a method.</p>
+        <p>Read the full breakdown: <a href="/en/wise-vs-revolut-vs-bank-vs-crypto/">Wise vs Revolut vs bank vs crypto for prop traders</a>.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <span>&copy; <span id="year"></span> PayoutCompare. Not financial advice — verify rates directly with providers.</span>
+      <span><a href="/en/disclosure/">Affiliate disclosure</a></span>
+    </div>
+  </footer>
+
+  <script src="/assets/js/data.en.js"></script>
+  <script src="/assets/js/rates.js"></script>
+  <script src="/assets/js/calculator.js"></script>
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+    initCalculator("calculator-root", { fundingCurrency: "USD", localCurrency: "EUR", amount: 1000 });
+
+    const firmGrid = document.getElementById("firm-grid");
+    firmGrid.innerHTML = FIRMS.map(
+      (firm) => `
+        <a class="firm-card" href="/en/payout/${firm.slug}/">
+          <h3>${firm.name}</h3>
+          <p>${firm.methods.join(", ")}</p>
+        </a>
+      `
+    ).join("");
+  </script>
+</body>
+</html>

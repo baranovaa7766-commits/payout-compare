@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Как вывести деньги с FundedNext: способы вывода, комиссии и лучший курс конвертации</title>
+  <meta name="description" content="Способы вывода FundedNext, комиссии и минимальные суммы, плюс калькулятор, чтобы сравнить самый выгодный способ конвертировать выплату в локальную валюту." />
+  <link rel="canonical" href="/payout/fundednext/" />
+  <link rel="alternate" hreflang="ru" href="/payout/fundednext/" />
+  <link rel="alternate" hreflang="en" href="/en/payout/fundednext/" />
+  <link rel="alternate" hreflang="x-default" href="/payout/fundednext/" />
+  <link rel="stylesheet" href="/assets/css/style.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a class="site-logo" href="/">PayoutCompare</a>
+      <nav class="site-nav">
+        <a href="/#firms">Пропфирмы</a>
+        <a href="/wise-vs-revolut-vs-bank-vs-crypto/">Wise vs Revolut vs банк vs крипто</a>
+        <a href="/disclosure/">Раскрытие информации</a>
+        <a class="lang-switch" href="/en/payout/fundednext/" aria-label="Switch to English"><span class="lang-switch-icon">🌐</span>EN</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <h1>Как вывести деньги с FundedNext</h1>
+        <p>Способы вывода FundedNext, комиссии и минимальные суммы — плюс калькулятор, чтобы увидеть самый дешёвый способ превратить выплату в вашу локальную валюту.</p>
+      </div>
+    </section>
+
+    <section class="section container">
+      <div class="card">
+        <h2>Способы вывода FundedNext</h2>
+        <table class="data-table">
+          <tbody>
+            <tr><th>Способы</th><td>USDT/USDC (крипто), RiseWorks, Банковский перевод, Confirmo</td></tr>
+            <tr><th>Комиссия</th><td>До 3%, оплачивает трейдер</td></tr>
+            <tr><th>Минимальная сумма вывода</th><td>Не указана — проверьте перед тем как полагаться на это</td></tr>
+            <tr><th>Типичная скорость</th><td>24 часа через крипто/RiseWorks, до 5 дней через банк</td></tr>
+          </tbody>
+        </table>
+        <div class="notes-box">RiseWorks доступен только в отдельных регионах. Трейдеры из Ирана могут выводить средства только через TC Pay.</div>
+        <div class="verify-box">Минимальная сумма вывода не была подтверждена в ходе исследования, а комиссии могут отличаться в зависимости от способа. Всегда сверяйте актуальные комиссии и лимиты в своём личном кабинете на <a href="https://fundednext.com" target="_blank" rel="noopener">сайте FundedNext</a> перед выводом средств.</div>
+      </div>
+    </section>
+
+    <section class="container">
+      <div class="calculator-card">
+        <h2 style="margin-top:0">Сравните варианты конвертации</h2>
+        <p>FundedNext выплачивает в USD. Как только деньги поступят, вот что вы реально получите после конвертации в локальную валюту по каждому способу:</p>
+        <div id="calculator-root"></div>
+      </div>
+    </section>
+
+    <section class="section container">
+      <div class="card">
+        <h2>Другие инструкции по выводу</h2>
+        <div class="firm-grid" id="firm-grid"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <span>&copy; <span id="year"></span> PayoutCompare. Это не финансовая консультация — уточняйте курсы напрямую у провайдеров.</span>
+      <span><a href="/disclosure/">Раскрытие партнёрской монетизации</a></span>
+    </div>
+  </footer>
+
+  <script src="/assets/js/data.js"></script>
+  <script src="/assets/js/rates.js"></script>
+  <script src="/assets/js/calculator.js"></script>
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+    initCalculator("calculator-root", { fundingCurrency: "USD", localCurrency: "EUR", amount: 1000 });
+
+    document.getElementById("firm-grid").innerHTML = FIRMS.filter((f) => f.slug !== "fundednext")
+      .map(
+        (firm) => `
+        <a class="firm-card" href="/payout/${firm.slug}/">
+          <h3>${firm.name}</h3>
+          <p>${firm.methods.join(", ")}</p>
+        </a>
+      `
+      )
+      .join("");
+  </script>
+</body>
+</html>

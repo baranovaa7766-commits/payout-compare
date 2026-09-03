@@ -1,0 +1,368 @@
+:root {
+  --color-bg: #f7f9fc;
+  --color-surface: #ffffff;
+  --color-text: #16202a;
+  --color-text-muted: #5b6b7c;
+  --color-primary: #1f6feb;
+  --color-primary-dark: #164d9e;
+  --color-border: #e1e7ef;
+  --color-best: #e7f6ec;
+  --color-best-border: #2fa84f;
+  --radius: 10px;
+  --max-width: 1080px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background: var(--color-bg);
+  color: var(--color-text);
+  line-height: 1.55;
+}
+
+a {
+  color: var(--color-primary);
+}
+
+.container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Header */
+.site-header {
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.site-header .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 16px;
+  padding-bottom: 16px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.site-logo {
+  font-weight: 700;
+  font-size: 1.25rem;
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.site-nav {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.site-nav a {
+  color: var(--color-text-muted);
+  text-decoration: none;
+  font-size: 0.95rem;
+}
+
+.site-nav a:hover {
+  color: var(--color-primary);
+}
+
+.lang-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  background: var(--color-bg);
+  color: var(--color-text) !important;
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-decoration: none !important;
+  line-height: 1;
+}
+
+.lang-switch:hover {
+  border-color: var(--color-primary);
+  background: #eaf1fd;
+}
+
+.lang-switch .lang-switch-icon {
+  font-size: 1rem;
+}
+
+/* Hero */
+.hero {
+  padding: 48px 0 24px;
+  text-align: center;
+}
+
+.hero h1 {
+  font-size: clamp(1.7rem, 4vw, 2.6rem);
+  margin: 0 0 12px;
+}
+
+.hero p {
+  color: var(--color-text-muted);
+  max-width: 640px;
+  margin: 0 auto;
+  font-size: 1.05rem;
+}
+
+/* Calculator widget */
+.calculator-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 24px;
+  margin: 24px 0 40px;
+  box-shadow: 0 1px 3px rgba(20, 30, 45, 0.06);
+}
+
+.calc-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 16px;
+  align-items: end;
+}
+
+.calc-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.calc-field label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+}
+
+.calc-field .optional {
+  font-weight: 400;
+  color: var(--color-text-muted);
+}
+
+.calc-field input,
+.calc-field select {
+  padding: 10px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  font-size: 1rem;
+  background: var(--color-bg);
+}
+
+.calc-submit {
+  grid-column: 1 / -1;
+  padding: 12px 20px;
+  background: var(--color-primary);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.calc-submit:hover {
+  background: var(--color-primary-dark);
+}
+
+.calc-result {
+  margin-top: 24px;
+}
+
+.calc-loading,
+.calc-error {
+  color: var(--color-text-muted);
+}
+
+.calc-error {
+  color: #b3261e;
+}
+
+.calc-country-note {
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+  background: #fbf6e7;
+  border: 1px solid #eddf9f;
+  padding: 10px 14px;
+  border-radius: 8px;
+}
+
+.calc-table-wrap {
+  overflow-x: auto;
+}
+
+.calc-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.calc-table th,
+.calc-table td {
+  text-align: left;
+  padding: 12px 10px;
+  border-bottom: 1px solid var(--color-border);
+  white-space: nowrap;
+}
+
+.calc-table tr.calc-best {
+  background: var(--color-best);
+}
+
+.calc-badge {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 2px 8px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  background: var(--color-best-border);
+  color: #fff;
+  border-radius: 999px;
+}
+
+.calc-link {
+  text-decoration: none;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.calc-disclaimer {
+  margin-top: 16px;
+  font-size: 0.82rem;
+  color: var(--color-text-muted);
+}
+
+/* Content sections */
+.section {
+  padding: 32px 0;
+}
+
+.section h2 {
+  font-size: 1.5rem;
+  margin-bottom: 16px;
+}
+
+.card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 24px;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+}
+
+.data-table th,
+.data-table td {
+  text-align: left;
+  padding: 10px;
+  border-bottom: 1px solid var(--color-border);
+  vertical-align: top;
+}
+
+.firm-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.firm-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 20px;
+  text-decoration: none;
+  color: var(--color-text);
+  transition: box-shadow 0.15s ease, transform 0.15s ease;
+}
+
+.firm-card:hover {
+  box-shadow: 0 4px 14px rgba(20, 30, 45, 0.1);
+  transform: translateY(-2px);
+}
+
+.firm-card h3 {
+  margin: 0 0 6px;
+}
+
+.firm-card p {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+}
+
+.notes-box {
+  background: #fbf6e7;
+  border: 1px solid #eddf9f;
+  border-radius: 8px;
+  padding: 14px 18px;
+  font-size: 0.92rem;
+}
+
+.verify-box {
+  background: #fdeceb;
+  border: 1px solid #f3b7b1;
+  border-radius: 8px;
+  padding: 14px 18px;
+  font-size: 0.9rem;
+  margin: 16px 0;
+}
+
+/* Footer */
+.site-footer {
+  border-top: 1px solid var(--color-border);
+  margin-top: 48px;
+  padding: 28px 0;
+  color: var(--color-text-muted);
+  font-size: 0.85rem;
+}
+
+.site-footer a {
+  color: var(--color-text-muted);
+}
+
+.site-footer .container {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+@media (max-width: 640px) {
+  .calc-table thead {
+    display: none;
+  }
+  .calc-table tr {
+    display: block;
+    border-bottom: 2px solid var(--color-border);
+    padding: 10px 0;
+  }
+  .calc-table td {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    border-bottom: none;
+    white-space: normal;
+    padding: 6px 0;
+  }
+  .calc-table td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: var(--color-text-muted);
+  }
+}

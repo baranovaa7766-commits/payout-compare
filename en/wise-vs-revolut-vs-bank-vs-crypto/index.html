@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wise vs Revolut vs Bank vs Crypto: Best Way to Withdraw a Prop Firm Payout</title>
+  <meta name="description" content="A trader's guide to converting a prop-firm payout into local currency: how Wise, Revolut, bank transfer, and crypto compare on rate, fees, speed, and limits." />
+  <link rel="canonical" href="/en/wise-vs-revolut-vs-bank-vs-crypto/" />
+  <link rel="alternate" hreflang="ru" href="/wise-vs-revolut-vs-bank-vs-crypto/" />
+  <link rel="alternate" hreflang="en" href="/en/wise-vs-revolut-vs-bank-vs-crypto/" />
+  <link rel="alternate" hreflang="x-default" href="/wise-vs-revolut-vs-bank-vs-crypto/" />
+  <link rel="stylesheet" href="/assets/css/style.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a class="site-logo" href="/en/">PayoutCompare</a>
+      <nav class="site-nav">
+        <a href="/en/#firms">Prop firms</a>
+        <a href="/en/wise-vs-revolut-vs-bank-vs-crypto/">Wise vs Revolut vs Bank vs Crypto</a>
+        <a href="/en/disclosure/">Disclosure</a>
+        <a class="lang-switch" href="/wise-vs-revolut-vs-bank-vs-crypto/" aria-label="Переключить на русский"><span class="lang-switch-icon">🌐</span>RU</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <h1>Wise vs Revolut vs Bank vs Crypto for Prop Traders</h1>
+        <p>Once your prop firm approves a payout, converting it to your local currency is a separate decision — and it can cost you several percent either way. Here's how the four common methods actually compare.</p>
+      </div>
+    </section>
+
+    <section class="section container">
+      <div class="card">
+        <h2>Wise</h2>
+        <p>Wise converts at the mid-market rate and adds a small, published markup — usually the most transparent option and often the best value for a straight USD/EUR/GBP-to-local-currency conversion. Transfers typically land in 1-2 days. There's no large hidden spread to watch for, which makes it easy to sanity-check against the calculator on the homepage before you send.</p>
+
+        <h2>Revolut</h2>
+        <p>Revolut can be just as competitive as Wise on weekdays within your plan's free FX allowance, and it's often faster. The catch: fair-usage limits and weekend/out-of-hours fees can quietly add a percent or more if you're not on a paid plan or you convert outside market hours. Check your plan's terms before assuming the free rate applies.</p>
+
+        <h2>Bank transfer (SWIFT)</h2>
+        <p>The default option if you do nothing — your bank receives the payout and converts it automatically. Convenient, but banks typically mark up the exchange rate well below mid-market (often 2-4%) and add a flat wire fee on top ($15-45 is common). For larger payouts this is usually the most expensive method in absolute terms, even though it requires no extra setup.</p>
+
+        <h2>Crypto (USDT and similar)</h2>
+        <p>If your prop firm pays out in crypto, or you choose to route funds through USDT, the trade-off shifts: settlement can be near-instant, but you're now exposed to network fees and — critically — the spread charged by whichever exchange or on/off-ramp you use to convert USDT back into your local currency. That final cash-out leg is where most of the real cost hides.</p>
+
+        <h2>So which is best?</h2>
+        <p>For most traders converting USD or EUR payouts into a major local currency, Wise or Revolut (within free-plan limits) will out-perform a bank transfer, often by 2-4% of the payout. Crypto is worth it mainly when speed matters more than a percent or two, or when it's the only method your prop firm and country support well. There's no universal answer — run your actual payout amount and currencies through the <a href="/en/">calculator on the homepage</a>, since fees and rates shift with amount, currency pair, and provider terms.</p>
+      </div>
+    </section>
+
+    <section class="section container">
+      <div class="card">
+        <h2>Payout guides by prop firm</h2>
+        <p>See the specific withdrawal methods each firm supports:</p>
+        <div class="firm-grid" id="firm-grid"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <span>&copy; <span id="year"></span> PayoutCompare. Not financial advice — verify rates directly with providers.</span>
+      <span><a href="/en/disclosure/">Affiliate disclosure</a></span>
+    </div>
+  </footer>
+
+  <script src="/assets/js/data.en.js"></script>
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    document.getElementById("firm-grid").innerHTML = FIRMS.map(
+      (firm) => `
+        <a class="firm-card" href="/en/payout/${firm.slug}/">
+          <h3>${firm.name}</h3>
+          <p>${firm.methods.join(", ")}</p>
+        </a>
+      `
+    ).join("");
+  </script>
+</body>
+</html>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Как вывести деньги с FTMO: способы вывода, комиссии и лучший курс конвертации</title>
+  <meta name="description" content="Способы вывода FTMO, комиссии и минимальные суммы, плюс калькулятор, чтобы сравнить самый выгодный способ конвертировать выплату FTMO в локальную валюту." />
+  <link rel="canonical" href="/payout/ftmo/" />
+  <link rel="alternate" hreflang="ru" href="/payout/ftmo/" />
+  <link rel="alternate" hreflang="en" href="/en/payout/ftmo/" />
+  <link rel="alternate" hreflang="x-default" href="/payout/ftmo/" />
+  <link rel="stylesheet" href="/assets/css/style.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a class="site-logo" href="/">PayoutCompare</a>
+      <nav class="site-nav">
+        <a href="/#firms">Пропфирмы</a>
+        <a href="/wise-vs-revolut-vs-bank-vs-crypto/">Wise vs Revolut vs банк vs крипто</a>
+        <a href="/disclosure/">Раскрытие информации</a>
+        <a class="lang-switch" href="/en/payout/ftmo/" aria-label="Switch to English"><span class="lang-switch-icon">🌐</span>EN</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <h1>Как вывести деньги с FTMO</h1>
+        <p>Способы вывода FTMO, комиссии и минимальные суммы — плюс калькулятор, чтобы увидеть самый дешёвый способ превратить выплату в вашу локальную валюту.</p>
+      </div>
+    </section>
+
+    <section class="section container">
+      <div class="card">
+        <h2>Способы вывода FTMO</h2>
+        <table class="data-table">
+          <tbody>
+            <tr><th>Способы</th><td>Банковский перевод, Visa Direct / Mastercard Send (до $20 000), Skrill (до $3 000), Крипто</td></tr>
+            <tr><th>Комиссия фирмы</th><td>Отсутствует — но ваш банк может взимать свою за входящий перевод</td></tr>
+            <tr><th>Минимальная сумма вывода</th><td>$20 через банк, $50 через крипто</td></tr>
+            <tr><th>Типичная скорость</th><td>1-2 дня</td></tr>
+          </tbody>
+        </table>
+        <div class="notes-box">Банковский перевод недоступен трейдерам из Венесуэлы, Кубы, Судана и Украины — используйте Visa Direct/Mastercard Send, Skrill или крипто.</div>
+        <div class="verify-box">Эти данные собраны в ходе исследования и могут быть устаревшими. Всегда сверяйте актуальные комиссии и лимиты в своём личном кабинете на <a href="https://ftmo.com" target="_blank" rel="noopener">сайте FTMO</a> перед выводом средств.</div>
+      </div>
+    </section>
+
+    <section class="container">
+      <div class="calculator-card">
+        <h2 style="margin-top:0">Сравните варианты конвертации</h2>
+        <p>FTMO выплачивает в USD. Как только деньги поступят, вот что вы реально получите после конвертации в локальную валюту по каждому способу:</p>
+        <div id="calculator-root"></div>
+      </div>
+    </section>
+
+    <section class="section container">
+      <div class="card">
+        <h2>Другие инструкции по выводу</h2>
+        <div class="firm-grid" id="firm-grid"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <span>&copy; <span id="year"></span> PayoutCompare. Это не финансовая консультация — уточняйте курсы напрямую у провайдеров.</span>
+      <span><a href="/disclosure/">Раскрытие партнёрской монетизации</a></span>
+    </div>
+  </footer>
+
+  <script src="/assets/js/data.js"></script>
+  <script src="/assets/js/rates.js"></script>
+  <script src="/assets/js/calculator.js"></script>
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+    initCalculator("calculator-root", { fundingCurrency: "USD", localCurrency: "EUR", amount: 1000 });
+
+    document.getElementById("firm-grid").innerHTML = FIRMS.filter((f) => f.slug !== "ftmo")
+      .map(
+        (firm) => `
+        <a class="firm-card" href="/payout/${firm.slug}/">
+          <h3>${firm.name}</h3>
+          <p>${firm.methods.join(", ")}</p>
+        </a>
+      `
+      )
+      .join("");
+  </script>
+</body>
+</html>
