@@ -231,6 +231,18 @@ a {
   border-radius: 999px;
 }
 
+.calc-unverified {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 2px 8px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  background: #fbf6e7;
+  border: 1px solid #eddf9f;
+  color: #8a6d1d;
+  border-radius: 999px;
+}
+
 .calc-link {
   text-decoration: none;
   font-weight: 600;

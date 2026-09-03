@@ -1,30 +1,33 @@
-// Переиспользуемый виджет калькулятора сравнения выплат / reusable payout
-// comparison calculator widget. Язык берётся из <html lang="ru|en">.
-// Usage: initCalculator('calculator-root', { fundingCurrency: 'USD' })
+// Переиспользуемый виджет калькулятора сравнения крипто-маршрутов вывода
+// (биржа для покупки USDT + off-ramp для конвертации в локальную валюту),
+// плюс банк как контрастный baseline. Язык берётся из <html lang="ru|en">.
+// Usage: initCalculator('calculator-root', { fundingCurrency: 'USD', localCurrency: 'RUB' })
 
 const CALC_STRINGS = {
   ru: {
     amountLabel: "Сумма выплаты",
     fromLabel: "Валюта фандинга",
     toLabel: "Ваша локальная валюта",
+    exchangeLabel: "Биржа для покупки USDT",
     countryLabel: "Страна проживания",
     countryOptional: "(необязательно)",
-    countryPlaceholder: "например, Германия",
-    submitButton: "Сравнить способы вывода",
+    countryPlaceholder: "например, Казахстан",
+    submitButton: "Сравнить маршруты вывода",
     errorAmount: "Введите сумму выплаты больше 0.",
     loading: "Загружаем актуальный курс обмена…",
     errorRates: "Не удалось загрузить актуальный курс. Попробуйте ещё раз через минуту.",
-    countryNote: (country) => `Здесь показано общее сравнение способов. Доступность конкретных провайдеров может отличаться для резидентов страны «<strong>${country}</strong>» — уточните это у провайдера перед выбором.`,
-    thMethod: "Способ",
+    countryNote: (country) => `Здесь показано общее сравнение маршрутов. Доступность конкретных сервисов может отличаться для резидентов страны «<strong>${country}</strong>» — уточните это у сервиса перед выбором.`,
+    thMethod: "Маршрут",
     thRate: "Курс",
     thFee: "Комиссия",
     thSpeed: "Скорость",
     thReceive: "Получите на руки",
     bestBadge: "Выгоднее всего",
-    feeMarkup: (percent) => `~${percent}% наценка к курсу`,
+    unverifiedBadge: "не подтверждено",
+    feeMarkup: (percent) => `~${percent}% спред`,
     feeFlat: (amount) => `${amount} фикс.`,
     feeNone: "Не раскрывается",
-    disclaimer: 'Оценка на основе типичных опубликованных наценок и комиссий — фактический курс зависит от провайдера, направления перевода и рыночной ситуации. Всегда сверяйте актуальный курс перед выводом средств. См.',
+    disclaimer: 'Оценка на основе типичных опубликованных спредов и комиссий — фактический курс зависит от сервиса, суммы и рыночной ситуации. Данные по off-ramp сервисам пока не подтверждены напрямую поддержкой — уточняйте перед выводом. См.',
     disclaimerLinkText: "раскрытие информации о партнёрских ссылках",
     disclosureHref: "/disclosure/",
     getStarted: "Оформить",
@@ -34,24 +37,26 @@ const CALC_STRINGS = {
     amountLabel: "Payout amount",
     fromLabel: "Funding currency",
     toLabel: "Your local currency",
+    exchangeLabel: "Exchange to buy USDT",
     countryLabel: "Country of residence",
     countryOptional: "(optional)",
-    countryPlaceholder: "e.g. Germany",
-    submitButton: "Compare payout methods",
+    countryPlaceholder: "e.g. Kazakhstan",
+    submitButton: "Compare payout routes",
     errorAmount: "Enter a payout amount greater than 0.",
     loading: "Fetching live exchange rates…",
     errorRates: "Couldn't fetch live rates right now. Please try again in a moment.",
-    countryNote: (country) => `Showing generic method comparisons. Availability of specific providers can vary for residents of <strong>${country}</strong> — confirm with the provider before choosing.`,
-    thMethod: "Method",
+    countryNote: (country) => `Showing a generic comparison of routes. Availability of specific services can vary for residents of <strong>${country}</strong> — confirm with the provider before choosing.`,
+    thMethod: "Route",
     thRate: "Rate",
     thFee: "Fee",
     thSpeed: "Speed",
     thReceive: "You receive",
     bestBadge: "Best value",
-    feeMarkup: (percent) => `~${percent}% FX markup`,
+    unverifiedBadge: "unconfirmed",
+    feeMarkup: (percent) => `~${percent}% spread`,
     feeFlat: (amount) => `${amount} flat`,
     feeNone: "None disclosed",
-    disclaimer: "Estimates based on typical published markups and fees as of publication — actual rates vary by provider, corridor, and market conditions. Always confirm the live rate before withdrawing. See our",
+    disclaimer: "Estimates based on typical published spreads and fees — actual rates vary by provider, amount, and market conditions. Off-ramp figures haven't been confirmed directly with support yet — verify before withdrawing. See our",
     disclaimerLinkText: "disclosure",
     disclosureHref: "/en/disclosure/",
     getStarted: "Get started",
@@ -70,9 +75,11 @@ function initCalculator(rootId, options) {
   const opts = Object.assign(
     {
       fundingCurrency: "USD",
-      localCurrency: "EUR",
+      localCurrency: "RUB",
       amount: 1000,
-      methods: METHODS,
+      exchanges: typeof EXCHANGES !== "undefined" ? EXCHANGES : [],
+      offramps: typeof OFFRAMPS !== "undefined" ? OFFRAMPS : [],
+      bank: typeof BANK_BASELINE !== "undefined" ? BANK_BASELINE : null,
     },
     options || {}
   );
@@ -98,6 +105,10 @@ function buildFormHTML(opts, t) {
       (c) => `<option value="${c}" ${c === selected ? "selected" : ""}>${c}</option>`
     ).join("");
 
+  const exchangeOptions = opts.exchanges
+    .map((e) => `<option value="${e.id}">${e.name}</option>`)
+    .join("");
+
   return `
     <form class="calc-form">
       <div class="calc-field">
@@ -111,6 +122,10 @@ function buildFormHTML(opts, t) {
       <div class="calc-field">
         <label for="calc-to">${t.toLabel}</label>
         <select id="calc-to" name="to">${currencyOptions(opts.localCurrency)}</select>
+      </div>
+      <div class="calc-field">
+        <label for="calc-exchange">${t.exchangeLabel}</label>
+        <select id="calc-exchange" name="exchange">${exchangeOptions}</select>
       </div>
       <div class="calc-field">
         <label for="calc-country">${t.countryLabel} <span class="optional">${t.countryOptional}</span></label>
@@ -128,6 +143,8 @@ async function runCalculation(form, resultEl, opts, t) {
   const from = formData.get("from");
   const to = formData.get("to");
   const country = (formData.get("country") || "").trim();
+  const exchangeId = formData.get("exchange");
+  const exchange = opts.exchanges.find((e) => e.id === exchangeId) || opts.exchanges[0];
 
   if (!amount || amount <= 0) {
     resultEl.innerHTML = `<p class="calc-error">${t.errorAmount}</p>`;
@@ -144,15 +161,44 @@ async function runCalculation(form, resultEl, opts, t) {
     return;
   }
 
-  const rows = opts.methods
-    .map((method) => {
-      const amountAfterFee = Math.max(amount - method.fixedFee, 0);
-      const effectiveRate = rate * (1 - method.markupPercent / 100);
-      const finalAmount = amountAfterFee * effectiveRate;
-      return { method, finalAmount, effectiveRate };
-    })
-    .sort((a, b) => b.finalAmount - a.finalAmount);
+  const routeRows = opts.offramps.map((offramp) => {
+    // Комиссии двух этапов вычитаются последовательно (эквивалентно вычитанию
+    // суммы), а спреды перемножаются: итоговый спред = 1 - (1-e)(1-o).
+    const amountAfterFees = Math.max(amount - exchange.fixedFee - offramp.fixedFee, 0);
+    const combinedSpreadPercent =
+      100 * (1 - (1 - exchange.spreadPercent / 100) * (1 - offramp.spreadPercent / 100));
+    const effectiveRate = rate * (1 - combinedSpreadPercent / 100);
+    const finalAmount = amountAfterFees * effectiveRate;
+    return {
+      name: `${exchange.name} → ${offramp.name}`,
+      finalAmount,
+      effectiveRate,
+      feeText: formatFee(combinedSpreadPercent, exchange.fixedFee + offramp.fixedFee, from, t),
+      speed: `${exchange.speed} + ${offramp.speed}`,
+      linkId: exchange.id,
+      unverified: !offramp.affiliateConfirmed,
+    };
+  });
 
+  const bankRow = opts.bank
+    ? (() => {
+        const amountAfterFee = Math.max(amount - opts.bank.fixedFee, 0);
+        const effectiveRate = rate * (1 - opts.bank.markupPercent / 100);
+        const finalAmount = amountAfterFee * effectiveRate;
+        return {
+          name: opts.bank.name,
+          finalAmount,
+          effectiveRate,
+          feeText: formatFee(opts.bank.markupPercent, opts.bank.fixedFee, from, t),
+          speed: opts.bank.speed,
+          linkId: null,
+          unverified: false,
+        };
+      })()
+    : null;
+
+  const rows = bankRow ? [...routeRows, bankRow] : routeRows;
+  rows.sort((a, b) => b.finalAmount - a.finalAmount);
   const best = rows[0];
 
   resultEl.innerHTML = `
@@ -175,14 +221,15 @@ async function runCalculation(form, resultEl, opts, t) {
               (row) => `
             <tr class="${row === best ? "calc-best" : ""}">
               <td data-label="${t.thMethod}">
-                ${row.method.name}
+                ${row.name}
                 ${row === best ? `<span class="calc-badge">${t.bestBadge}</span>` : ""}
+                ${row.unverified ? `<span class="calc-unverified">${t.unverifiedBadge}</span>` : ""}
               </td>
               <td data-label="${t.thRate}">1 ${from} = ${row.effectiveRate.toFixed(4)} ${to}</td>
-              <td data-label="${t.thFee}">${formatFee(row.method, from, t)}</td>
-              <td data-label="${t.thSpeed}">${row.method.speed}</td>
+              <td data-label="${t.thFee}">${row.feeText}</td>
+              <td data-label="${t.thSpeed}">${row.speed}</td>
               <td data-label="${t.thReceive}"><strong>${formatMoney(row.finalAmount, to, t)}</strong></td>
-              <td data-label="">${linkForMethod(row.method, t)}</td>
+              <td data-label="">${linkForId(row.linkId, t)}</td>
             </tr>
           `
             )
@@ -194,11 +241,15 @@ async function runCalculation(form, resultEl, opts, t) {
   `;
 }
 
-function formatFee(method, currency, t) {
+function formatFee(percent, fixedFee, currency, t) {
   const parts = [];
-  if (method.markupPercent) parts.push(t.feeMarkup(method.markupPercent));
-  if (method.fixedFee) parts.push(t.feeFlat(formatMoney(method.fixedFee, currency, t)));
+  if (percent) parts.push(t.feeMarkup(round1(percent)));
+  if (fixedFee) parts.push(t.feeFlat(formatMoney(fixedFee, currency, t)));
   return parts.length ? parts.join(" + ") : t.feeNone;
+}
+
+function round1(value) {
+  return Math.round(value * 10) / 10;
 }
 
 function formatMoney(value, currency, t) {
@@ -213,8 +264,9 @@ function formatMoney(value, currency, t) {
   }
 }
 
-function linkForMethod(method, t) {
-  const link = (typeof AFFILIATE_LINKS !== "undefined" && AFFILIATE_LINKS[method.id]) || {};
+function linkForId(id, t) {
+  if (!id) return "";
+  const link = (typeof AFFILIATE_LINKS !== "undefined" && AFFILIATE_LINKS[id]) || {};
   if (link.url) {
     return `<a class="calc-link" href="${link.url}" target="_blank" rel="noopener sponsored">${t.getStarted}</a>`;
   }

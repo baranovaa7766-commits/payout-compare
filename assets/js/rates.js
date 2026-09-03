@@ -1,6 +1,11 @@
-// Fetches mid-market exchange rates from the free Frankfurter API
-// (https://www.frankfurter.app/) and caches them in sessionStorage for a
-// few minutes to avoid hammering the API while a user tweaks the calculator.
+// Fetches mid-market exchange rates from the free, keyless open.er-api.com
+// (https://www.exchangerate-api.com/docs/free) and caches them in
+// sessionStorage for a few minutes to avoid hammering the API while a user
+// tweaks the calculator.
+//
+// NOTE: the Frankfurter API (mirrors ECB reference rates) was tried first,
+// but it doesn't publish RUB/KZT/UAH/BYN — which are exactly the currencies
+// this site's audience needs post-pivot — so it can't be used here.
 
 const RATES_CACHE_MS = 5 * 60 * 1000;
 
@@ -11,13 +16,13 @@ async function getMidMarketRate(fromCurrency, toCurrency) {
   const cached = readCache(cacheKey);
   if (cached !== null) return cached;
 
-  const url = `https://api.frankfurter.dev/v1/latest?from=${encodeURIComponent(fromCurrency)}&to=${encodeURIComponent(toCurrency)}`;
+  const url = `https://open.er-api.com/v6/latest/${encodeURIComponent(fromCurrency)}`;
   const response = await fetch(url);
   if (!response.ok) {
     throw new Error(`Rate lookup failed (${response.status})`);
   }
   const data = await response.json();
-  const rate = data && data.rates ? data.rates[toCurrency] : undefined;
+  const rate = data && data.result === "success" && data.rates ? data.rates[toCurrency] : undefined;
   if (typeof rate !== "number") {
     throw new Error("Rate not available for this currency pair");
   }

@@ -17,7 +17,7 @@
       <a class="site-logo" href="/">PayoutCompare</a>
       <nav class="site-nav">
         <a href="/#firms">Пропфирмы</a>
-        <a href="/wise-vs-revolut-vs-bank-vs-crypto/">Wise vs Revolut vs банк vs крипто</a>
+        <a href="/crypto-payout-guide/">Гид по крипто-выводу</a>
         <a href="/disclosure/">Раскрытие информации</a>
         <a class="lang-switch" href="/en/payout/fundednext/" aria-label="Switch to English"><span class="lang-switch-icon">🌐</span>EN</a>
       </nav>
@@ -76,7 +76,7 @@
   <script src="/assets/js/calculator.js"></script>
   <script>
     document.getElementById("year").textContent = new Date().getFullYear();
-    initCalculator("calculator-root", { fundingCurrency: "USD", localCurrency: "EUR", amount: 1000 });
+    initCalculator("calculator-root", { fundingCurrency: "USD", localCurrency: "RUB", amount: 1000 });
 
     document.getElementById("firm-grid").innerHTML = FIRMS.filter((f) => f.slug !== "fundednext")
       .map(

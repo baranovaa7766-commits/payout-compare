@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PayoutCompare — сравнение Wise, Revolut, банка и крипто для вывода выплат трейдеров</title>
-  <meta name="description" content="Узнайте, сколько денег вы реально получите на руки при конвертации выплаты пропфирмы через Wise, Revolut, банковский перевод или крипто — сравните курс, комиссию и скорость в одном калькуляторе." />
+  <title>PayoutCompare — сравнение крипто-маршрутов вывода выплат трейдеров</title>
+  <meta name="description" content="Узнайте, сколько денег вы реально получите на руки при выводе выплаты пропфирмы через связку биржа + off-ramp сервис — сравните курс, комиссию и скорость в одном калькуляторе." />
   <link rel="canonical" href="/" />
   <link rel="alternate" hreflang="ru" href="/" />
   <link rel="alternate" hreflang="en" href="/en/" />
   <link rel="alternate" hreflang="x-default" href="/" />
-  <meta property="og:title" content="PayoutCompare — сравнение способов вывода выплат для трейдеров" />
-  <meta property="og:description" content="Сравните реальную сумму на руки при выводе выплаты через Wise, Revolut, банк или крипто, прежде чем выбрать способ." />
+  <meta property="og:title" content="PayoutCompare — сравнение крипто-маршрутов вывода выплат для трейдеров" />
+  <meta property="og:description" content="Сравните реальную сумму на руки при выводе выплаты через разные связки биржа + off-ramp, прежде чем выбрать маршрут." />
   <meta property="og:type" content="website" />
   <link rel="stylesheet" href="/assets/css/style.css" />
 </head>
@@ -20,7 +20,7 @@
       <a class="site-logo" href="/">PayoutCompare</a>
       <nav class="site-nav">
         <a href="/#firms">Пропфирмы</a>
-        <a href="/wise-vs-revolut-vs-bank-vs-crypto/">Wise vs Revolut vs банк vs крипто</a>
+        <a href="/crypto-payout-guide/">Гид по крипто-выводу</a>
         <a href="/disclosure/">Раскрытие информации</a>
         <a class="lang-switch" href="/en/" aria-label="Switch to English"><span class="lang-switch-icon">🌐</span>EN</a>
       </nav>
@@ -31,7 +31,7 @@
     <section class="hero">
       <div class="container">
         <h1>Сколько вы реально получите с выплаты пропфирмы?</h1>
-        <p>Сравните Wise, Revolut, банковский перевод и крипто в одном месте — реальный курс, комиссия и скорость — прежде чем конвертировать вывод в свою локальную валюту.</p>
+        <p>Wise и Revolut не работают с резидентами России — VPN эту проблему не решает, ограничения основаны на верификации личности, а не на IP. Сравните маршруты «биржа + off-ramp сервис» и банковский перевод (для контраста) — реальный курс, комиссия и скорость — прежде чем выводить деньги в свою локальную валюту.</p>
       </div>
     </section>
 
@@ -50,8 +50,8 @@
     <section class="section container">
       <div class="card">
         <h2>Почему сумма, одобренная пропфирмой, — это не то, что окажется у вас на счету</h2>
-        <p>Ваша пропфирма отправляет выплату в USD (или EUR/GBP), обычно через банковский перевод, крипто или платёжного партнёра вроде RiseWorks. То, что вы получите в итоге, зависит от двух факторов, как только деньги отправлены: <strong>курс обмена</strong>, по которому они конвертируются в вашу локальную валюту, и <strong>комиссии</strong>, взимаемые по пути. Эти два фактора легко могут изменить итоговую сумму на 3-5% — реальные деньги при пятизначной выплате. Этот сайт создан, чтобы сделать это сравнение прозрачным до того, как вы выберете способ.</p>
-        <p>Читайте подробный разбор: <a href="/wise-vs-revolut-vs-bank-vs-crypto/">Wise vs Revolut vs банк vs крипто для трейдеров пропфирм</a>.</p>
+        <p>Ваша пропфирма отправляет выплату в USD (или EUR/GBP), обычно через банковский перевод, крипто или платёжного партнёра вроде RiseWorks. Для трейдеров из России и СНГ путь дальше обычно лежит через покупку USDT на бирже и последующую конвертацию в рубли или локальную валюту через off-ramp сервис — Wise и Revolut для этого недоступны. Итоговая сумма зависит от двух этапов сразу: <strong>спреда/курса</strong> на каждом шаге и <strong>комиссий</strong>, взимаемых и биржей, и off-ramp сервисом. Эти потери легко складываются в 3-5% — реальные деньги при пятизначной выплате. Этот сайт создан, чтобы сделать это сравнение прозрачным до того, как вы выберете маршрут.</p>
+        <p>Читайте подробный разбор: <a href="/crypto-payout-guide/">гид по крипто-выводу для трейдеров пропфирм</a>.</p>
       </div>
     </section>
   </main>
@@ -68,7 +68,7 @@
   <script src="/assets/js/calculator.js"></script>
   <script>
     document.getElementById("year").textContent = new Date().getFullYear();
-    initCalculator("calculator-root", { fundingCurrency: "USD", localCurrency: "EUR", amount: 1000 });
+    initCalculator("calculator-root", { fundingCurrency: "USD", localCurrency: "RUB", amount: 1000 });
 
     const firmGrid = document.getElementById("firm-grid");
     firmGrid.innerHTML = FIRMS.map(
