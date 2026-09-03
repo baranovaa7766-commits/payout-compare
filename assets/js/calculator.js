@@ -9,6 +9,7 @@ const CALC_STRINGS = {
     fromLabel: "Валюта фандинга",
     toLabel: "Ваша локальная валюта",
     exchangeLabel: "Биржа для покупки USDT",
+    allExchangesOption: "Все биржи (полная картина)",
     countryLabel: "Страна проживания",
     countryOptional: "(необязательно)",
     countryPlaceholder: "например, Казахстан",
@@ -38,6 +39,7 @@ const CALC_STRINGS = {
     fromLabel: "Funding currency",
     toLabel: "Your local currency",
     exchangeLabel: "Exchange to buy USDT",
+    allExchangesOption: "All exchanges (full picture)",
     countryLabel: "Country of residence",
     countryOptional: "(optional)",
     countryPlaceholder: "e.g. Kazakhstan",
@@ -110,9 +112,10 @@ function buildFormHTML(opts, t) {
   // they're only added to the "from" list, right after USD.
   const fundingCurrencies = [CURRENCIES[0], "USDT", "USDC", ...CURRENCIES.slice(1)];
 
-  const exchangeOptions = opts.exchanges
-    .map((e) => `<option value="${e.id}">${e.name}</option>`)
-    .join("");
+  const exchangeOptions =
+    opts.exchanges
+      .map((e, i) => `<option value="${e.id}" ${i === 0 ? "selected" : ""}>${e.name}</option>`)
+      .join("") + `<option value="all">${t.allExchangesOption}</option>`;
 
   return `
     <form class="calc-form">
@@ -149,6 +152,7 @@ async function runCalculation(form, resultEl, opts, t) {
   const to = formData.get("to");
   const country = (formData.get("country") || "").trim();
   const exchangeId = formData.get("exchange");
+  const showAllExchanges = exchangeId === "all";
   const exchange = opts.exchanges.find((e) => e.id === exchangeId) || opts.exchanges[0];
 
   if (!amount || amount <= 0) {
@@ -171,39 +175,51 @@ async function runCalculation(form, resultEl, opts, t) {
     return;
   }
 
-  const routeRows = opts.offramps.map((offramp) => {
-    if (skipExchange) {
-      // Already holding USDT — there's no "buy USDT" leg, just the off-ramp.
-      const amountAfterFees = Math.max(amount - offramp.fixedFee, 0);
-      const effectiveRate = rate * (1 - offramp.spreadPercent / 100);
-      const finalAmount = amountAfterFees * effectiveRate;
-      return {
-        name: offramp.name,
-        finalAmount,
-        effectiveRate,
-        feeText: formatFee(offramp.spreadPercent, offramp.fixedFee, from, t),
-        speed: offramp.speed,
-        linkId: null,
-        unverified: !offramp.affiliateConfirmed,
-      };
-    }
+  const buildOfframpOnlyRow = (offramp) => {
+    // Already holding USDT — there's no "buy USDT" leg, just the off-ramp.
+    const amountAfterFees = Math.max(amount - offramp.fixedFee, 0);
+    const effectiveRate = rate * (1 - offramp.spreadPercent / 100);
+    const finalAmount = amountAfterFees * effectiveRate;
+    return {
+      name: offramp.name,
+      finalAmount,
+      effectiveRate,
+      feeText: formatFee(offramp.spreadPercent, offramp.fixedFee, from, t),
+      speed: offramp.speed,
+      linkId: null,
+      unverified: !offramp.affiliateConfirmed,
+    };
+  };
+
+  const buildRoute = (ex, offramp) => {
     // Комиссии двух этапов вычитаются последовательно (эквивалентно вычитанию
     // суммы), а спреды перемножаются: итоговый спред = 1 - (1-e)(1-o).
-    const amountAfterFees = Math.max(amount - exchange.fixedFee - offramp.fixedFee, 0);
+    const amountAfterFees = Math.max(amount - ex.fixedFee - offramp.fixedFee, 0);
     const combinedSpreadPercent =
-      100 * (1 - (1 - exchange.spreadPercent / 100) * (1 - offramp.spreadPercent / 100));
+      100 * (1 - (1 - ex.spreadPercent / 100) * (1 - offramp.spreadPercent / 100));
     const effectiveRate = rate * (1 - combinedSpreadPercent / 100);
     const finalAmount = amountAfterFees * effectiveRate;
     return {
-      name: `${exchange.name} → ${offramp.name}`,
+      name: `${ex.name} → ${offramp.name}`,
       finalAmount,
       effectiveRate,
-      feeText: formatFee(combinedSpreadPercent, exchange.fixedFee + offramp.fixedFee, from, t),
-      speed: `${exchange.speed} + ${offramp.speed}`,
-      linkId: exchange.id,
+      feeText: formatFee(combinedSpreadPercent, ex.fixedFee + offramp.fixedFee, from, t),
+      speed: `${ex.speed} + ${offramp.speed}`,
+      linkId: ex.id,
       unverified: !offramp.affiliateConfirmed,
     };
-  });
+  };
+
+  let routeRows;
+  if (skipExchange) {
+    routeRows = opts.offramps.map(buildOfframpOnlyRow);
+  } else if (showAllExchanges) {
+    // "Все биржи" — show every exchange × off-ramp combination so the user
+    // sees the full picture instead of just one exchange's routes.
+    routeRows = opts.exchanges.flatMap((ex) => opts.offramps.map((offramp) => buildRoute(ex, offramp)));
+  } else {
+    routeRows = opts.offramps.map((offramp) => buildRoute(exchange, offramp));
+  }
 
   const bankRow = opts.bank && !skipExchange
     ? (() => {
