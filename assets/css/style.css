@@ -10,6 +10,7 @@
   --color-best-border: #2fa84f;
   --radius: 10px;
   --max-width: 1080px;
+  --max-width-wide: 1320px;
 }
 
 * {
@@ -32,6 +33,10 @@ a {
   max-width: var(--max-width);
   margin: 0 auto;
   padding: 0 20px;
+}
+
+.container--wide {
+  max-width: var(--max-width-wide);
 }
 
 /* Header */
@@ -211,6 +216,10 @@ a {
   text-align: left;
   padding: 12px 10px;
   border-bottom: 1px solid var(--color-border);
+}
+
+.calc-table td:nth-child(2),
+.calc-table td:nth-child(5) {
   white-space: nowrap;
 }
 
