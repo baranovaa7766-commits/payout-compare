@@ -19,10 +19,25 @@
 
 body {
   margin: 0;
+  position: relative;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   background: var(--color-bg);
   color: var(--color-text);
   line-height: 1.55;
+}
+
+/* Faint site-wide money motif (coins/banknotes) — decorative, kept very low
+   opacity so it reads as texture, not clutter. Sits behind all content. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.05;
+  background-repeat: repeat;
+  background-size: 280px 280px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='280' height='280' viewBox='0 0 280 280'%3E%3Cg fill='none' stroke='rgb(31,111,235)' stroke-width='3'%3E%3Ccircle cx='50' cy='55' r='28'/%3E%3Ccircle cx='50' cy='55' r='18'/%3E%3Cpath d='M50 42 L50 68 M42 55 L58 55' stroke-width='2'/%3E%3C/g%3E%3Cg fill='none' stroke='rgb(47,168,79)' stroke-width='3'%3E%3Crect x='158' y='36' width='92' height='54' rx='8'/%3E%3Ccircle cx='204' cy='63' r='13'/%3E%3Cpath d='M170 46 L170 80 M238 46 L238 80' stroke-width='2'/%3E%3C/g%3E%3Cg fill='none' stroke='rgb(31,111,235)' stroke-width='2.5'%3E%3Ccircle cx='212' cy='202' r='20'/%3E%3Ccircle cx='212' cy='202' r='12'/%3E%3C/g%3E%3Cg fill='none' stroke='rgb(47,168,79)' stroke-width='2.5'%3E%3Crect x='26' y='168' width='74' height='42' rx='7'/%3E%3Ccircle cx='63' cy='189' r='10'/%3E%3C/g%3E%3C/svg%3E");
 }
 
 a {
@@ -56,26 +71,52 @@ a {
 }
 
 .site-logo {
-  font-weight: 700;
-  font-size: 1.25rem;
-  color: var(--color-text);
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-weight: 800;
+  font-size: 1.3rem;
+  letter-spacing: -0.02em;
   text-decoration: none;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-best-border));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+.site-logo::before {
+  content: "";
+  width: 26px;
+  height: 26px;
+  flex-shrink: 0;
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='10' fill='none' stroke='rgb(31,111,235)' stroke-width='2'/%3E%3Cpath d='M12 7v10M9 9.6c0-1.1 1.2-1.6 3-1.6s3 .8 3 1.9-1.2 1.6-3 1.6-3 .7-3 1.8 1.2 1.9 3 1.9 3-.5 3-1.6' fill='none' stroke='rgb(31,111,235)' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
 }
 
 .site-nav {
   display: flex;
-  gap: 20px;
+  gap: 4px;
   flex-wrap: wrap;
 }
 
 .site-nav a {
-  color: var(--color-text-muted);
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--color-text);
   text-decoration: none;
-  font-size: 0.95rem;
+  font-size: 0.92rem;
+  font-weight: 600;
+  padding: 8px 14px;
+  border-radius: 999px;
+  transition: background-color 0.15s ease, color 0.15s ease;
 }
 
 .site-nav a:hover {
-  color: var(--color-primary);
+  color: var(--color-primary-dark);
+  background: #eaf1fd;
 }
 
 .lang-switch {
@@ -118,6 +159,52 @@ a {
   max-width: 640px;
   margin: 0 auto;
   font-size: 1.05rem;
+}
+
+/* Homepage hero only — gradient headline + soft coin-glow accents. */
+.hero--home {
+  position: relative;
+  overflow: hidden;
+}
+
+.hero--home::before,
+.hero--home::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(50px);
+  z-index: -1;
+  pointer-events: none;
+}
+
+.hero--home::before {
+  width: 260px;
+  height: 260px;
+  top: -70px;
+  left: 6%;
+  background: radial-gradient(circle, rgba(31, 111, 235, 0.22), transparent 70%);
+}
+
+.hero--home::after {
+  width: 240px;
+  height: 240px;
+  bottom: -80px;
+  right: 8%;
+  background: radial-gradient(circle, rgba(47, 168, 79, 0.2), transparent 70%);
+}
+
+.hero--home h1 {
+  background: linear-gradient(120deg, var(--color-primary), var(--color-best-border));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero--home p {
+  color: var(--color-text);
+  opacity: 0.78;
+  font-size: 1.1rem;
 }
 
 /* Calculator widget */
