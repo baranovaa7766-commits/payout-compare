@@ -56,6 +56,13 @@ const EXCHANGES = [
 // Off-ramp services — stage 2 (USDT to local currency). Affiliate
 // relationships are NOT CONFIRMED — figures below are preliminary until
 // each provider's support team confirms terms.
+//
+// A7A5 is deliberately excluded: it isn't a standalone off-ramp but a
+// ruble-backed stablecoin from A7/Old Vector LLC, traded mainly on the
+// Grinex exchange — and Grinex, along with entities tied to A7A5, was
+// sanctioned by the US Treasury's OFAC in August 2025 as a successor to the
+// already-sanctioned Garantex exchange. Don't re-add without re-checking
+// sanctions status.
 const OFFRAMPS = [
   {
     id: "whitebird",
@@ -65,15 +72,6 @@ const OFFRAMPS = [
     speed: "10-30 minutes",
     affiliateConfirmed: false,
     notes: "Licensed platform (Belarus): converts USDT/BTC/ETH to RUB/BYN onto a Mir card.",
-  },
-  {
-    id: "a7a5",
-    name: "A7A5",
-    spreadPercent: 1.7,
-    fixedFee: 1,
-    speed: "10-30 minutes",
-    affiliateConfirmed: false,
-    notes: "An alternative to Whitebird for the CIS region.",
   },
   {
     id: "cifra",
