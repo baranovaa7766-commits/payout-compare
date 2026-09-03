@@ -9,6 +9,11 @@
 
 const CURRENCIES = ["USD", "EUR", "GBP", "AUD", "CAD", "CHF", "JPY", "PLN", "CZK", "HUF", "RON", "BGN", "TRY", "INR", "ZAR", "MXN", "BRL", "NGN", "SEK", "NOK", "DKK", "RUB", "KZT", "UAH", "BYN"];
 
+// Дата последней ручной сверки спредов/комиссий ниже (EXCHANGES, OFFRAMPS,
+// BANK_BASELINE) с публичными тарифами провайдеров. Показывается на сайте
+// как «Тарифы проверены: …» — обновляйте вместе с цифрами.
+const DATA_LAST_VERIFIED = "2026-09-03";
+
 // Криптобиржи — этап 1 (покупка/получение USDT). Партнёрские программы
 // подтверждены для всех четырёх.
 const EXCHANGES = [

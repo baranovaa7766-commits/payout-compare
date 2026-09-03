@@ -12,6 +12,11 @@
 
 const CURRENCIES = ["USD", "EUR", "GBP", "AUD", "CAD", "CHF", "JPY", "PLN", "CZK", "HUF", "RON", "BGN", "TRY", "INR", "ZAR", "MXN", "BRL", "NGN", "SEK", "NOK", "DKK", "RUB", "KZT", "UAH", "BYN"];
 
+// Date the spreads/fees below (EXCHANGES, OFFRAMPS, BANK_BASELINE) were last
+// manually checked against providers' public tariffs. Shown on the site as
+// "Fees verified: …" — update alongside the numbers.
+const DATA_LAST_VERIFIED = "2026-09-03";
+
 // Crypto exchanges — stage 1 (buying/receiving USDT). Affiliate programs
 // are confirmed for all four.
 const EXCHANGES = [

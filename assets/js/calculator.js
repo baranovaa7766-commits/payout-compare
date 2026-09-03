@@ -10,6 +10,8 @@ const CALC_STRINGS = {
     toLabel: "Ваша локальная валюта",
     exchangeLabel: "Биржа для покупки USDT",
     allExchangesOption: "Все биржи (полная картина)",
+    liveRate: "Курс — в реальном времени",
+    tariffsVerified: (date) => `Тарифы сервисов проверены: ${date}`,
     countryLabel: "Страна проживания",
     countryOptional: "(необязательно)",
     countryPlaceholder: "например, Казахстан",
@@ -40,6 +42,8 @@ const CALC_STRINGS = {
     toLabel: "Your local currency",
     exchangeLabel: "Exchange to buy USDT",
     allExchangesOption: "All exchanges (full picture)",
+    liveRate: "Live exchange rate",
+    tariffsVerified: (date) => `Provider fees verified: ${date}`,
     countryLabel: "Country of residence",
     countryOptional: "(optional)",
     countryPlaceholder: "e.g. Kazakhstan",
@@ -101,6 +105,22 @@ function initCalculator(rootId, options) {
   runCalculation(form, resultEl, opts, t);
 }
 
+function buildTrustBarHTML(t) {
+  const verifiedDate =
+    typeof DATA_LAST_VERIFIED !== "undefined"
+      ? new Intl.DateTimeFormat(t.locale, { year: "numeric", month: "long", day: "numeric" }).format(
+          new Date(DATA_LAST_VERIFIED)
+        )
+      : null;
+
+  return `
+    <div class="calc-trust-bar">
+      <span class="calc-trust-item"><span class="calc-trust-dot calc-trust-dot--live"></span>${t.liveRate}</span>
+      ${verifiedDate ? `<span class="calc-trust-item"><span class="calc-trust-dot"></span>${t.tariffsVerified(verifiedDate)}</span>` : ""}
+    </div>
+  `;
+}
+
 function buildFormHTML(opts, t) {
   const currencyOptions = (list, selected) =>
     list
@@ -118,6 +138,7 @@ function buildFormHTML(opts, t) {
       .join("") + `<option value="all">${t.allExchangesOption}</option>`;
 
   return `
+    ${buildTrustBarHTML(t)}
     <form class="calc-form">
       <div class="calc-field">
         <label for="calc-amount">${t.amountLabel}</label>

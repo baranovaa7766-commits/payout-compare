@@ -130,6 +130,36 @@ a {
   box-shadow: 0 1px 3px rgba(20, 30, 45, 0.06);
 }
 
+.calc-trust-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--color-border);
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+}
+
+.calc-trust-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.calc-trust-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  flex-shrink: 0;
+}
+
+.calc-trust-dot--live {
+  background: var(--color-best-border);
+  box-shadow: 0 0 0 3px rgba(47, 168, 79, 0.18);
+}
+
 .calc-form {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
