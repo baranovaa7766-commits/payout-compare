@@ -100,10 +100,15 @@ function initCalculator(rootId, options) {
 }
 
 function buildFormHTML(opts, t) {
-  const currencyOptions = (selected) =>
-    CURRENCIES.map(
-      (c) => `<option value="${c}" ${c === selected ? "selected" : ""}>${c}</option>`
-    ).join("");
+  const currencyOptions = (list, selected) =>
+    list
+      .map((c) => `<option value="${c}" ${c === selected ? "selected" : ""}>${c}</option>`)
+      .join("");
+
+  // USDT can be a funding currency (e.g. a firm pays out in crypto directly)
+  // but doesn't make sense as the target "local currency", so it's only
+  // added to the "from" list, right after USD.
+  const fundingCurrencies = [CURRENCIES[0], "USDT", ...CURRENCIES.slice(1)];
 
   const exchangeOptions = opts.exchanges
     .map((e) => `<option value="${e.id}">${e.name}</option>`)
@@ -117,11 +122,11 @@ function buildFormHTML(opts, t) {
       </div>
       <div class="calc-field">
         <label for="calc-from">${t.fromLabel}</label>
-        <select id="calc-from" name="from">${currencyOptions(opts.fundingCurrency)}</select>
+        <select id="calc-from" name="from">${currencyOptions(fundingCurrencies, opts.fundingCurrency)}</select>
       </div>
       <div class="calc-field">
         <label for="calc-to">${t.toLabel}</label>
-        <select id="calc-to" name="to">${currencyOptions(opts.localCurrency)}</select>
+        <select id="calc-to" name="to">${currencyOptions(CURRENCIES, opts.localCurrency)}</select>
       </div>
       <div class="calc-field">
         <label for="calc-exchange">${t.exchangeLabel}</label>
@@ -153,15 +158,35 @@ async function runCalculation(form, resultEl, opts, t) {
 
   resultEl.innerHTML = `<p class="calc-loading">${t.loading}</p>`;
 
+  // USDT isn't an ISO currency the rate API knows about — it trades ~1:1
+  // with USD, so look up USD and use that as the mid-market rate.
+  const skipExchange = from === "USDT";
+  const apiFrom = skipExchange ? "USD" : from;
+
   let rate;
   try {
-    rate = await getMidMarketRate(from, to);
+    rate = await getMidMarketRate(apiFrom, to);
   } catch (err) {
     resultEl.innerHTML = `<p class="calc-error">${t.errorRates}</p>`;
     return;
   }
 
   const routeRows = opts.offramps.map((offramp) => {
+    if (skipExchange) {
+      // Already holding USDT — there's no "buy USDT" leg, just the off-ramp.
+      const amountAfterFees = Math.max(amount - offramp.fixedFee, 0);
+      const effectiveRate = rate * (1 - offramp.spreadPercent / 100);
+      const finalAmount = amountAfterFees * effectiveRate;
+      return {
+        name: offramp.name,
+        finalAmount,
+        effectiveRate,
+        feeText: formatFee(offramp.spreadPercent, offramp.fixedFee, from, t),
+        speed: offramp.speed,
+        linkId: null,
+        unverified: !offramp.affiliateConfirmed,
+      };
+    }
     // Комиссии двух этапов вычитаются последовательно (эквивалентно вычитанию
     // суммы), а спреды перемножаются: итоговый спред = 1 - (1-e)(1-o).
     const amountAfterFees = Math.max(amount - exchange.fixedFee - offramp.fixedFee, 0);
@@ -180,7 +205,7 @@ async function runCalculation(form, resultEl, opts, t) {
     };
   });
 
-  const bankRow = opts.bank
+  const bankRow = opts.bank && !skipExchange
     ? (() => {
         const amountAfterFee = Math.max(amount - opts.bank.fixedFee, 0);
         const effectiveRate = rate * (1 - opts.bank.markupPercent / 100);
