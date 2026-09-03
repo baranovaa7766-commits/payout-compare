@@ -105,10 +105,10 @@ function buildFormHTML(opts, t) {
       .map((c) => `<option value="${c}" ${c === selected ? "selected" : ""}>${c}</option>`)
       .join("");
 
-  // USDT can be a funding currency (e.g. a firm pays out in crypto directly)
-  // but doesn't make sense as the target "local currency", so it's only
-  // added to the "from" list, right after USD.
-  const fundingCurrencies = [CURRENCIES[0], "USDT", ...CURRENCIES.slice(1)];
+  // USDT/USDC can be a funding currency (e.g. a firm pays out in crypto
+  // directly) but don't make sense as the target "local currency", so
+  // they're only added to the "from" list, right after USD.
+  const fundingCurrencies = [CURRENCIES[0], "USDT", "USDC", ...CURRENCIES.slice(1)];
 
   const exchangeOptions = opts.exchanges
     .map((e) => `<option value="${e.id}">${e.name}</option>`)
@@ -158,9 +158,9 @@ async function runCalculation(form, resultEl, opts, t) {
 
   resultEl.innerHTML = `<p class="calc-loading">${t.loading}</p>`;
 
-  // USDT isn't an ISO currency the rate API knows about — it trades ~1:1
-  // with USD, so look up USD and use that as the mid-market rate.
-  const skipExchange = from === "USDT";
+  // USDT/USDC aren't ISO currencies the rate API knows about — both trade
+  // ~1:1 with USD, so look up USD and use that as the mid-market rate.
+  const skipExchange = from === "USDT" || from === "USDC";
   const apiFrom = skipExchange ? "USD" : from;
 
   let rate;
