@@ -28,7 +28,7 @@ const CALC_STRINGS = {
     feeMarkup: (percent) => `~${percent}% спред`,
     feeFlat: (amount) => `${amount} фикс.`,
     feeNone: "Не раскрывается",
-    disclaimer: 'Оценка на основе типичных опубликованных спредов и комиссий — фактический курс зависит от сервиса, суммы и рыночной ситуации. Данные по off-ramp сервисам пока не подтверждены напрямую поддержкой — уточняйте перед выводом. См.',
+    disclaimer: 'Курс обновляется при каждом расчёте, спред и комиссии — по официально опубликованным тарифам провайдеров на момент проверки (могут измениться без предупреждения). Сверяйте перед крупным выводом. См.',
     disclaimerLinkText: "раскрытие информации о партнёрских ссылках",
     disclosureHref: "/disclosure/",
     getStarted: "Оформить",
@@ -58,7 +58,7 @@ const CALC_STRINGS = {
     feeMarkup: (percent) => `~${percent}% spread`,
     feeFlat: (amount) => `${amount} flat`,
     feeNone: "None disclosed",
-    disclaimer: "Estimates based on typical published spreads and fees — actual rates vary by provider, amount, and market conditions. Off-ramp figures haven't been confirmed directly with support yet — verify before withdrawing. See our",
+    disclaimer: "The rate refreshes on every calculation; spreads and fees come from providers' officially published tariffs as of the last check (subject to change without notice). Verify before a large withdrawal. See our",
     disclaimerLinkText: "disclosure",
     disclosureHref: "/en/disclosure/",
     getStarted: "Get started",
@@ -187,7 +187,7 @@ async function runCalculation(form, resultEl, opts, t) {
       feeText: formatFee(offramp.spreadPercent, offramp.fixedFee, from, t),
       speed: offramp.speed,
       linkId: null,
-      unverified: !offramp.affiliateConfirmed,
+      unverified: !offramp.dataVerified,
     };
   };
 
@@ -206,7 +206,7 @@ async function runCalculation(form, resultEl, opts, t) {
       feeText: formatFee(combinedSpreadPercent, ex.fixedFee + offramp.fixedFee, from, t),
       speed: `${ex.speed} + ${offramp.speed}`,
       linkId: ex.id,
-      unverified: !offramp.affiliateConfirmed,
+      unverified: !offramp.dataVerified,
     };
   };
 

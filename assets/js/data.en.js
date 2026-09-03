@@ -53,9 +53,15 @@ const EXCHANGES = [
   },
 ];
 
-// Off-ramp services — stage 2 (USDT to local currency). Affiliate
-// relationships are NOT CONFIRMED — figures below are preliminary until
-// each provider's support team confirms terms.
+// Off-ramp services — stage 2 (USDT to local currency).
+//
+// Affiliate/referral programs (sign-up-via-link) are NOT what `dataVerified`
+// tracks. `dataVerified: true` only means the spread/fixedFee below came
+// from the provider's own published fee page (not a guess) as of the date
+// noted. Fees change without notice and neither provider exposes a public
+// API for them — there's no live auto-refresh for these the way there is
+// for the exchange rate in rates.js (which refetches on every calculation).
+// Re-check the linked pages every few months and update the numbers.
 //
 // A7A5 is deliberately excluded: it isn't a standalone off-ramp but a
 // ruble-backed stablecoin from A7/Old Vector LLC, traded mainly on the
@@ -66,20 +72,32 @@ const EXCHANGES = [
 const OFFRAMPS = [
   {
     id: "whitebird",
+    // Source: https://whitebird.io/commission (checked 2026-09-03).
+    // "Other payment methods" -> "Russian bank cards", "client sells"
+    // column: 2.0%. That's the most universally applicable RUB card
+    // withdrawal option; VTB Pay is cheaper (1.7%) but only for VTB
+    // cardholders. No separate flat/network fee is listed on top of it.
     name: "Whitebird",
-    spreadPercent: 1.5,
-    fixedFee: 1,
+    spreadPercent: 2.0,
+    fixedFee: 0,
     speed: "10-30 minutes",
-    affiliateConfirmed: false,
-    notes: "Licensed platform (Belarus): converts USDT/BTC/ETH to RUB/BYN onto a Mir card.",
+    dataVerified: true,
+    notes: "Licensed platform (Belarus): converts USDT/BTC/ETH to RUB/BYN onto a Mir card. 2.0% is the rate for withdrawing to a Russian bank card, whitebird.io/commission.",
   },
   {
     id: "cifra",
+    // Source: https://cifra.by/rates (checked 2026-09-03).
+    // 1.5% is the crypto-to-fiat (USDT/RUB) conversion fee on the entry-
+    // level "Consulting" plan. On top of that, non-Belarus residents pay a
+    // flat RUB withdrawal fee of 500 RUB (0 if withdrawing into a Cifra
+    // Bank account). Converted to ~$6 at ~85 RUB/USD for consistency with
+    // the other fixedFee values (the original fee is in RUB, not USD).
     name: "Cifra Markets",
-    spreadPercent: 2,
-    fixedFee: 1,
-    speed: "not specified — pending confirmation",
-    affiliateConfirmed: false,
+    spreadPercent: 1.5,
+    fixedFee: 6,
+    speed: "1 business day (withdrawals only process on bank business days)",
+    dataVerified: true,
+    notes: "Brokerage platform for CIS-based traders. 1.5% conversion + a 500 RUB withdrawal fee (0 if withdrawing into a Cifra Bank account), cifra.by/rates.",
     notes: "A brokerage platform for CIS-based traders.",
   },
 ];
