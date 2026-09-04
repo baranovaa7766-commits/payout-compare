@@ -106,7 +106,7 @@
 - TraderPayoutHub
 - ClearPayout
 - WithdrawFX
-- PayoutCompare
+- LossProof
 - FXOut
 
 ## 8. Что НЕ входит в MVP (для следующих итераций)
